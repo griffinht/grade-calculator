@@ -399,6 +399,7 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
                       value={assignment.total}
                       onChange={(e) => handleAssignmentChange(catName, assignmentIndex, 'total', e.target.value)}
                       min="0"
+                      tabIndex="-1"
                     />
                   </div>
                   <button
