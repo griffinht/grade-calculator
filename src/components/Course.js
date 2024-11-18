@@ -213,27 +213,31 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
             />
           </div>
           <div className="flex items-center gap-2">
-            <input
-              className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Target Grade"
-              name="target"
-              type="number"
-              min="0"
-              max="100"
-              value={course.target}
-              onChange={(e) => handleCourseChange(index, e)}
-            />
-            {course.target && (
-              <span className={`text-sm font-medium ${
-                getLetterGrade(parseFloat(course.target)).startsWith('A') ? 'text-green-600' :
-                getLetterGrade(parseFloat(course.target)).startsWith('B') ? 'text-blue-600' :
-                getLetterGrade(parseFloat(course.target)).startsWith('C') ? 'text-yellow-600' :
-                getLetterGrade(parseFloat(course.target)).startsWith('D') ? 'text-orange-600' :
-                'text-red-600'
-              }`}>
-                {getLetterGrade(parseFloat(course.target))}
-              </span>
-            )}
+            <span className="text-sm text-gray-600 whitespace-nowrap">Grade Target:</span>
+            <div className="flex items-center gap-2">
+              <input
+                className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="95"
+                name="target"
+                type="number"
+                min="0"
+                max="100"
+                value={course.target}
+                onChange={(e) => handleCourseChange(index, e)}
+                aria-label="Target Grade Percentage"
+              />
+              {course.target && (
+                <span className={`text-sm font-medium ${
+                  getLetterGrade(parseFloat(course.target)).startsWith('A') ? 'text-green-600' :
+                  getLetterGrade(parseFloat(course.target)).startsWith('B') ? 'text-blue-600' :
+                  getLetterGrade(parseFloat(course.target)).startsWith('C') ? 'text-yellow-600' :
+                  getLetterGrade(parseFloat(course.target)).startsWith('D') ? 'text-orange-600' :
+                  'text-red-600'
+                }`}>
+                  ({getLetterGrade(parseFloat(course.target))})
+                </span>
+              )}
+            </div>
           </div>
           <input
             className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
