@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Plus } from "lucide-react";
 import Course from './components/Course';
 import Import from './components/Import';
+import PreviousGpa from './components/PreviousGpa';
 
 function App() {
   const [courses, setCourses] = useState(() => {
@@ -108,13 +109,6 @@ function App() {
     setCourses(newCourses);
   };
 
-  const handlePreviousGpaChange = (event) => {
-    setPreviousGpa({
-      ...previousGpa,
-      [event.target.name]: event.target.value
-    });
-  };
-
   const handleClearData = () => {
     if (window.confirm('Are you sure you want to clear all saved data?')) {
       localStorage.removeItem('courses');
@@ -140,6 +134,24 @@ function App() {
                 GPA Calculator
               </h1>
 
+              <div className="space-y-4">
+                {gpa !== null && (
+                  <div className="w-full bg-gray-50 p-6 rounded-xl text-center">
+                    <p className="text-sm text-gray-600 mb-1">
+                      Your Cumulative GPA
+                    </p>
+                    <p className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                      {gpa.toFixed(3)}
+                    </p>
+                    
+                    <PreviousGpa 
+                      previousGpa={previousGpa}
+                      setPreviousGpa={setPreviousGpa}
+                    />
+                  </div>
+                )}
+              </div>
+
               <Import setCourses={setCourses} />
 
               <div className="space-y-4">
@@ -164,56 +176,14 @@ function App() {
                   </button>
                 </div>
 
-                {gpa !== null && (
-                  <div className="w-full bg-gray-50 p-6 rounded-xl text-center">
-                    <p className="text-sm text-gray-600 mb-1">
-                      Your Cumulative GPA
-                    </p>
-                    <p className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-                      {gpa.toFixed(3)}
-                    </p>
-                  </div>
-                )}
-
-                <div className="mt-8 border-t pt-6">
-                  <details className="group">
-                    <summary className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">
-                      <span className="font-medium">Include Previous GPA</span>
-                      <span className="ml-2 text-gray-400">(optional)</span>
-                    </summary>
-                    <div className="mt-4 space-y-4">
-                      <div className="flex flex-col md:flex-row gap-4">
-                        <input
-                          className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          type="number"
-                          placeholder="Previous GPA"
-                          name="gpa"
-                          value={previousGpa.gpa}
-                          onChange={handlePreviousGpaChange}
-                          min="0"
-                          max="4.333"
-                          step="0.001"
-                        />
-                        <input
-                          className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          type="number"
-                          placeholder="Total Credits Completed"
-                          name="credits"
-                          value={previousGpa.credits}
-                          onChange={handlePreviousGpaChange}
-                          min="0"
-                        />
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={handleClearData}
-                        className="text-sm text-red-500 hover:text-red-600"
-                      >
-                        Clear All Saved Data
-                      </button>
-                    </div>
-                  </details>
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={handleClearData}
+                    className="text-sm text-gray-400 hover:text-red-500"
+                  >
+                    Clear saved data
+                  </button>
                 </div>
               </div>
             </div>
