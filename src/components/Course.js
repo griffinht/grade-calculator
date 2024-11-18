@@ -259,99 +259,26 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
 
   return (
     <div className={`space-y-4 p-4 border rounded-lg ${!course.included ? 'opacity-50' : ''}`}>
-      <div className="flex justify-between items-start">
-        <div className="flex flex-col md:flex-row gap-4 w-full">
-          <button
-            type="button"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="flex items-center gap-2 text-gray-500 hover:text-gray-700"
-            tabIndex="-1"
-          >
-            <svg
-              className={`h-5 w-5 transform transition-transform ${isCollapsed ? '' : 'rotate-90'}`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={course.included}
-              onChange={(e) => handleCourseChange(index, {
-                target: {
-                  name: 'included',
-                  value: e.target.checked
-                }
-              })}
-              className="h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500"
-            />
-            <input
-              className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Course Name"
-              name="name"
-              value={course.name}
-              onChange={(e) => handleCourseChange(index, e)}
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 whitespace-nowrap">Grade Target:</span>
-            <div className="flex items-center gap-2">
-              <input
-                className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="95"
-                name="target"
-                type="number"
-                min="0"
-                max="100"
-                value={course.target}
-                onChange={(e) => handleCourseChange(index, e)}
-                aria-label="Target Grade Percentage"
-              />
-              {course.target && (
-                <span className={`text-sm font-medium ${
-                  getLetterGrade(parseFloat(course.target)).startsWith('A') ? 'text-green-600' :
-                  getLetterGrade(parseFloat(course.target)).startsWith('B') ? 'text-blue-600' :
-                  getLetterGrade(parseFloat(course.target)).startsWith('C') ? 'text-yellow-600' :
-                  getLetterGrade(parseFloat(course.target)).startsWith('D') ? 'text-orange-600' :
-                  'text-red-600'
-                }`}>
-                  ({getLetterGrade(parseFloat(course.target))})
-                </span>
-              )}
-            </div>
-          </div>
+      {/* Top Row - Just Course Name and Controls */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 flex-1">
           <input
-            className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            type="number"
-            placeholder="Credits"
-            name="credits"
-            value={course.credits}
-            onChange={(e) => handleCourseChange(index, e)}
-            min="0"
-            max="6"
-            required
+            type="checkbox"
+            checked={course.included}
+            onChange={(e) => handleCourseChange(index, {
+              target: { name: 'included', value: e.target.checked }
+            })}
+            className="h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500"
           />
-          {isCollapsed && Object.keys(course.categories).length > 0 && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <span>Current:</span>
-              <span className="font-medium">
-                {calculateCurrentGrade()?.toFixed(1) || '-'}%
-              </span>
-              {calculateNeededScore() !== null && calculateNeededScore() > 100 && (
-                <span className="text-red-500">⚠️</span>
-              )}
-            </div>
-          )}
+          <input
+            className="flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Course Name"
+            name="name"
+            value={course.name}
+            onChange={(e) => handleCourseChange(index, e)}
+          />
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Export course={course} />
           <button
             type="button"
@@ -368,6 +295,78 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
         </div>
       </div>
 
+      {/* Second Row - Grade Target, Credits, and Minimize */}
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600 whitespace-nowrap">Grade Target:</span>
+          <input
+            className="w-16 px-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="95"
+            name="target"
+            type="number"
+            min="0"
+            max="100"
+            value={course.target}
+            onChange={(e) => handleCourseChange(index, e)}
+          />
+          {course.target && (
+            <span className={`text-sm font-medium ${
+              getLetterGrade(parseFloat(course.target)).startsWith('A') ? 'text-green-600' :
+              getLetterGrade(parseFloat(course.target)).startsWith('B') ? 'text-blue-600' :
+              getLetterGrade(parseFloat(course.target)).startsWith('C') ? 'text-yellow-600' :
+              getLetterGrade(parseFloat(course.target)).startsWith('D') ? 'text-orange-600' :
+              'text-red-600'
+            }`}>
+              ({getLetterGrade(parseFloat(course.target))})
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600 whitespace-nowrap">Credits:</span>
+          <input
+            className="w-12 px-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            type="number"
+            placeholder="3"
+            name="credits"
+            value={course.credits}
+            onChange={(e) => handleCourseChange(index, e)}
+            min="0"
+            max="6"
+            required
+          />
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="text-gray-500 hover:text-gray-700"
+          tabIndex="-1"
+        >
+          <svg
+            className={`h-5 w-5 transform transition-transform ${isCollapsed ? '' : 'rotate-90'}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        {isCollapsed && Object.keys(course.categories).length > 0 && (
+          <div className="flex items-center gap-2 text-sm text-gray-600 ml-auto">
+            <span>Current Grade:</span>
+            <span className="font-medium">
+              {calculateCurrentGrade()?.toFixed(1) || '-'}%
+            </span>
+            {calculateNeededScore()?.percentage > 100 && (
+              <span className="text-red-500">⚠️</span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Rest of the component (categories section) */}
       <div className={`space-y-2 transition-all duration-200 ${isCollapsed ? 'hidden' : ''}`}>
         {/* Existing Categories */}
         {Object.entries(course.categories).map(([catName, category]) => (
