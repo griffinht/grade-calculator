@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash } from "lucide-react";
 
 const getLetterGrade = (percentage) => {
@@ -21,9 +21,23 @@ const getLetterGrade = (percentage) => {
 function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryWeight, setNewCategoryWeight] = useState('');
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [collapsedCategories, setCollapsedCategories] = useState({});
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem(`course-${index}-collapsed`);
+    return saved ? JSON.parse(saved) : false;
+  });
+  const [collapsedCategories, setCollapsedCategories] = useState(() => {
+    const saved = localStorage.getItem(`course-${index}-categories-collapsed`);
+    return saved ? JSON.parse(saved) : {};
+  });
   const [newAssignments, setNewAssignments] = useState({});
+
+  useEffect(() => {
+    localStorage.setItem(`course-${index}-collapsed`, JSON.stringify(isCollapsed));
+  }, [isCollapsed, index]);
+
+  useEffect(() => {
+    localStorage.setItem(`course-${index}-categories-collapsed`, JSON.stringify(collapsedCategories));
+  }, [collapsedCategories, index]);
 
   const handleAddCategory = () => {
     if (!newCategoryName.trim()) return;
