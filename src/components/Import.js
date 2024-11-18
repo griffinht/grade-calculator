@@ -12,9 +12,9 @@ function Import({ setCourses }) {
       try {
         const courseData = JSON.parse(atob(sharedCourse));
         
-        setCourses(prevCourses => [...prevCourses, courseData]);
+        setCourses(prevCourses => [courseData, ...prevCourses]);
         
-        setNotification(`Imported "${courseData.name}" to your courses`);
+        setNotification(`Imported ${courseData.name || 'course'} to your courses`);
         
         window.history.replaceState({}, '', window.location.pathname);
       } catch (error) {
