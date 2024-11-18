@@ -119,9 +119,10 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
     const categories = course.categories;
     let earnedPoints = 0;
     let remainingWeight = 0;
+    let undecidedCategories = [];
 
-    // Calculate points already earned
-    Object.values(categories).forEach(cat => {
+    // Calculate points already earned and track undecided categories
+    Object.entries(categories).forEach(([name, cat]) => {
       const earned = parseFloat(cat.earned);
       const total = parseFloat(cat.total);
       const weight = parseFloat(cat.weight) || 0;
@@ -130,6 +131,7 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
         earnedPoints += (earned / total) * weight;
       } else {
         remainingWeight += weight;
+        undecidedCategories.push(name);
       }
     });
 
@@ -137,7 +139,10 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
     const neededPoints = target - earnedPoints;
     const neededPercentage = (neededPoints / remainingWeight) * 100;
 
-    return isFinite(neededPercentage) ? neededPercentage : null;
+    return {
+      percentage: isFinite(neededPercentage) ? neededPercentage : null,
+      undecidedCategories
+    };
   };
 
   const toggleCategoryCollapse = (catName) => {
@@ -612,21 +617,53 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
             {calculateNeededScore() !== null && (
               <div className="p-2 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-600">
-                  To achieve {course.target}% in this course, you need to score{' '}
-                  {calculateNeededScore() > 100 ? (
-                    <span className="font-medium text-red-600">
-                      over 100% ({calculateNeededScore().toFixed(1)}%)
-                    </span>
+                  {calculateNeededScore().undecidedCategories.length === 1 ? (
+                    <>
+                      To achieve {course.target}% in this course, you need to score{' '}
+                      {calculateNeededScore().percentage > 100 ? (
+                        <span className="font-medium text-red-600">
+                          over 100% ({calculateNeededScore().percentage.toFixed(1)}%)
+                        </span>
+                      ) : (
+                        <span className="font-medium text-blue-600">
+                          at least {calculateNeededScore().percentage.toFixed(1)}%
+                        </span>
+                      )}{' '}
+                      on your {calculateNeededScore().undecidedCategories[0]}.
+                    </>
+                  ) : calculateNeededScore().undecidedCategories.length === 2 ? (
+                    <>
+                      To achieve {course.target}% in this course, you need to score{' '}
+                      {calculateNeededScore().percentage > 100 ? (
+                        <span className="font-medium text-red-600">
+                          over 100% ({calculateNeededScore().percentage.toFixed(1)}%)
+                        </span>
+                      ) : (
+                        <span className="font-medium text-blue-600">
+                          at least {calculateNeededScore().percentage.toFixed(1)}%
+                        </span>
+                      )}{' '}
+                      on your {calculateNeededScore().undecidedCategories[0]} and {calculateNeededScore().undecidedCategories[1]}.
+                    </>
                   ) : (
                     <>
-                      at least{' '}
-                      <span className="font-medium text-blue-600">
-                        {calculateNeededScore().toFixed(1)}%
-                      </span>
+                      To achieve {course.target}% in this course, you need to score{' '}
+                      {calculateNeededScore().percentage > 100 ? (
+                        <span className="font-medium text-red-600">
+                          over 100% ({calculateNeededScore().percentage.toFixed(1)}%)
+                        </span>
+                      ) : (
+                        <>
+                          at least{' '}
+                          <span className="font-medium text-blue-600">
+                            {calculateNeededScore().percentage.toFixed(1)}%
+                          </span>
+                        </>
+                      )}{' '}
+                      on remaining work.
                     </>
-                  )}{' '}
-                  on remaining work.
-                  {calculateNeededScore() > 100 && (
+                  )}
+                  {calculateNeededScore().percentage > 100 && (
                     <span className="block mt-1 text-red-600 text-xs">
                       ⚠️ This target grade is not possible with current scores
                     </span>
