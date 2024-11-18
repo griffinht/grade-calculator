@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash, Share2 } from "lucide-react";
+import { Plus, Trash, Share2, X } from "lucide-react";
 
 const getLetterGrade = (percentage) => {
   if (!percentage) return '';
@@ -19,6 +19,8 @@ const getLetterGrade = (percentage) => {
 };
 
 const Export = ({ course }) => {
+  const [showModal, setShowModal] = useState(false);
+
   const handleShareCourse = () => {
     // Create a minimal version of the course object
     const shareableCourse = {
@@ -35,26 +37,54 @@ const Export = ({ course }) => {
     // Create the share URL
     const shareUrl = `${window.location.origin}${window.location.pathname}?course=${base64Course}`;
 
-    // Copy to clipboard
-    navigator.clipboard.writeText(shareUrl)
-      .then(() => {
-        alert('Share link copied to clipboard!');
-      })
-      .catch(() => {
-        alert('Failed to copy link. Please try again.');
-      });
+    // Show modal instead of copying
+    setShowModal(true);
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleShareCourse}
-      className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 rounded-md"
-      title="Share course"
-      tabIndex="-1"
-    >
-      <Share2 className="h-4 w-4" />
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={handleShareCourse}
+        className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 rounded-md"
+        title="Share course"
+        tabIndex="-1"
+      >
+        <Share2 className="h-4 w-4" />
+      </button>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-lg w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium">Share Course</h3>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mb-2">Copy this URL to share your course:</p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                readOnly
+                value={`${window.location.origin}${window.location.pathname}?course=${btoa(JSON.stringify({
+                  name: course.name,
+                  target: course.target,
+                  credits: course.credits,
+                  categories: course.categories,
+                  included: course.included
+                }))}`}
+                className="flex-1 p-2 border rounded-md bg-gray-50 text-sm"
+                onClick={(e) => e.target.select()}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
