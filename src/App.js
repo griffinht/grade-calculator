@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Plus } from "lucide-react";
 import Course from './components/Course';
+import Import from './components/Import';
 
 function App() {
   const [courses, setCourses] = useState(() => {
@@ -138,6 +139,8 @@ function App() {
               <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                 GPA Calculator
               </h1>
+
+              <Import setCourses={setCourses} />
 
               <div className="space-y-4">
                 {courses.map((course, index) => (

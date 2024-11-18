@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash } from "lucide-react";
+import { Plus, Trash, Share2 } from "lucide-react";
 
 const getLetterGrade = (percentage) => {
   if (!percentage) return '';
@@ -16,6 +16,46 @@ const getLetterGrade = (percentage) => {
   if (percentage >= 63) return 'D';
   if (percentage >= 60) return 'D-';
   return 'F';
+};
+
+const Export = ({ course }) => {
+  const handleShareCourse = () => {
+    // Create a minimal version of the course object
+    const shareableCourse = {
+      name: course.name,
+      target: course.target,
+      credits: course.credits,
+      categories: course.categories,
+      included: course.included
+    };
+
+    // Convert to base64
+    const base64Course = btoa(JSON.stringify(shareableCourse));
+    
+    // Create the share URL
+    const shareUrl = `${window.location.origin}${window.location.pathname}?course=${base64Course}`;
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
+        alert('Share link copied to clipboard!');
+      })
+      .catch(() => {
+        alert('Failed to copy link. Please try again.');
+      });
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleShareCourse}
+      className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 rounded-md"
+      title="Share course"
+      tabIndex="-1"
+    >
+      <Share2 className="h-4 w-4" />
+    </button>
+  );
 };
 
 function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
@@ -281,18 +321,21 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
             </div>
           )}
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            if (window.confirm('Are you sure you want to remove this course?')) {
-              handleRemoveCourse(index);
-            }
-          }}
-          className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-md"
-          tabIndex="-1"
-        >
-          <Trash className="h-4 w-4" />
-        </button>
+        <div className="flex gap-2">
+          <Export course={course} />
+          <button
+            type="button"
+            onClick={() => {
+              if (window.confirm('Are you sure you want to remove this course?')) {
+                handleRemoveCourse(index);
+              }
+            }}
+            className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-md"
+            tabIndex="-1"
+          >
+            <Trash className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       <div className={`space-y-2 transition-all duration-200 ${isCollapsed ? 'hidden' : ''}`}>
