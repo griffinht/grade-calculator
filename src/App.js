@@ -143,11 +143,16 @@ function App() {
                     <p className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
                       {gpa.toFixed(3)}
                     </p>
+                    <p className="text-sm text-gray-600 mt-4">
+                      (assuming you hit the target grades in all your classes)
+                    </p>
                     
-                    <PreviousGpa 
-                      previousGpa={previousGpa}
-                      setPreviousGpa={setPreviousGpa}
-                    />
+                    <div className="mt-8">
+                      <PreviousGpa 
+                        previousGpa={previousGpa}
+                        setPreviousGpa={setPreviousGpa}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
