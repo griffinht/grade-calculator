@@ -14,16 +14,13 @@ function Categories({
   const [newAssignments, setNewAssignments] = useState({});
 
   const handleAddCategory = () => {
-    if (!newCategoryName.trim()) return;
-    
-    const weight = parseFloat(newCategoryWeight) || 0;
     handleCourseChange(index, {
       target: {
         name: 'categories',
         value: {
           ...course.categories,
           [newCategoryName.toLowerCase()]: {
-            weight,
+            weight: parseFloat(newCategoryWeight),
             earned: '',
             total: 100,
             assignments: []
@@ -106,24 +103,29 @@ function Categories({
       ))}
       
       {/* New Category Row */}
-      <div className="flex items-center justify-between gap-4 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 border-2 border-dashed border-gray-300">
+      <form 
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleAddCategory();
+          // Focus back on the category name input
+          const categoryNameInput = e.target.querySelector('input[name="categoryName"]');
+          categoryNameInput?.focus();
+        }}
+        className="flex items-center justify-between gap-4 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 border-2 border-dashed border-gray-300"
+        autoComplete="off"
+      >
         <div className="flex items-center gap-2">
           <input
             className="w-[100px] px-2 py-1 rounded-md border border-gray-300 text-sm font-medium"
             type="text"
+            name="categoryName"
             placeholder="exams"
             value={newCategoryName}
             onChange={(e) => setNewCategoryName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                if (newCategoryName.trim()) {
-                  handleAddCategory();
-                  // Focus on the category name input of the next new category
-                  e.target.focus();
-                }
-              }
-            }}
+            required
+            pattern=".*\S+.*"
+            title="Category name cannot be empty"
+            autoComplete="off"
           />
           <div className="flex items-center gap-2">
             <input
@@ -146,40 +148,25 @@ function Categories({
           <input
             className="w-16 px-2 py-1 rounded-md border border-gray-300"
             type="number"
+            name="categoryWeight"
             placeholder="15"
             value={newCategoryWeight}
             onChange={(e) => setNewCategoryWeight(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                if (newCategoryName.trim()) {
-                  handleAddCategory();
-                  // Focus back on the category name input
-                  const categoryNameInput = e.target.closest('.rounded-lg').querySelector('input[type="text"]');
-                  categoryNameInput?.focus();
-                }
-              }
-            }}
-            min="0"
+            required
+            min="0.1"
             max="100"
+            step="0.1"
+            title="Weight must be greater than 0"
           />
           <span className="text-sm text-gray-400">%</span>
           <button
-            type="button"
-            onClick={() => {
-              if (newCategoryName.trim()) {
-                handleAddCategory();
-                // Focus back on the category name input
-                const categoryNameInput = document.querySelector('.border-dashed input[type="text"]');
-                categoryNameInput?.focus();
-              }
-            }}
+            type="submit"
             className="p-1 text-green-500 hover:text-green-600"
           >
             <Plus className="h-4 w-4" />
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
