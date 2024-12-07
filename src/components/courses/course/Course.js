@@ -215,22 +215,30 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
             <div className="flex items-center justify-between gap-4 p-2 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-gray-700 capitalize min-w-[100px]">
-                  Total Grade
+                  Current Grade
                 </span>
                 <div className="flex items-center gap-2">
-                  <input
-                    className="w-20 px-2 py-1 rounded-md border border-gray-300 bg-gray-100"
-                    type="number"
-                    value={calculateCurrentGrade()?.toFixed(1) || ''}
-                    disabled
-                  />
-                  <span className="text-gray-500">/</span>
-                  <input
-                    className="w-20 px-2 py-1 rounded-md border border-gray-300 bg-gray-100"
-                    type="number"
-                    value={course.target || 100}
-                    disabled
-                  />
+                  <div className="flex flex-col items-center">
+                    <span className="text-xs text-gray-500">Score</span>
+                    <input
+                      className={`w-20 px-2 py-1 rounded-md border border-gray-300 bg-gray-100 ${
+                        calculateCurrentGrade() >= (course.target || 100) ? 'text-green-600' : 'text-amber-600'
+                      }`}
+                      type="number"
+                      value={calculateCurrentGrade()?.toFixed(1) || ''}
+                      disabled
+                    />
+                  </div>
+                  <span className="text-gray-500 mt-4">/</span>
+                  <div className="flex flex-col items-center">
+                    <span className="text-xs text-gray-500">Target</span>
+                    <input
+                      className="w-20 px-2 py-1 rounded-md border border-gray-300 bg-gray-100 text-blue-600"
+                      type="number"
+                      value={course.target || 100}
+                      disabled
+                    />
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
