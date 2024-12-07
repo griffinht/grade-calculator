@@ -15,6 +15,41 @@ function Assignments({
   resetNewAssignment,
   collapsedCategories
 }) {
+  const addNewAssignment = (catName) => {
+    const newAssignment = newAssignments[catName];
+    
+    if (!newAssignment?.name) {
+      alert('Please enter an assignment name');
+      return;
+    }
+
+    const newCategories = { ...course.categories };
+    newCategories[catName].assignments = [
+      ...(category.assignments || []),
+      {
+        name: newAssignment.name,
+        earned: parseFloat(newAssignment.earned) || 0,
+        total: parseFloat(newAssignment.total) || 100
+      }
+    ];
+
+    // Update category totals
+    const totalEarned = newCategories[catName].assignments.reduce((sum, a) => sum + (parseFloat(a.earned) || 0), 0);
+    const totalPossible = newCategories[catName].assignments.reduce((sum, a) => sum + (parseFloat(a.total) || 0), 0);
+    newCategories[catName].earned = totalEarned;
+    newCategories[catName].total = totalPossible;
+
+    handleCourseChange(index, {
+      target: {
+        name: 'categories',
+        value: newCategories
+      }
+    });
+
+    console.log('New Assignment Added:', newAssignment);
+    resetNewAssignment(catName);
+  };
+
   const handleDeleteAssignment = (catName, assignmentIndex) => {
     const newCategories = { ...course.categories };
     newCategories[catName].assignments = category.assignments.filter((_, i) => i !== assignmentIndex);
@@ -61,7 +96,7 @@ function Assignments({
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
-              resetNewAssignment(catName);
+              addNewAssignment(catName);
             }
           }}
         />
@@ -93,7 +128,7 @@ function Assignments({
         </div>
         <button
           type="button"
-          onClick={() => resetNewAssignment(catName)}
+          onClick={() => addNewAssignment(catName)}
           className="text-green-500 hover:text-green-600"
         >
           <Plus className="h-4 w-4" />
