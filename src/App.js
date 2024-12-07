@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Plus } from "lucide-react";
-import Course from './components/Course';
+import Course from './components/courses/Course';
 import Import from './components/Import';
-import PreviousGpa from './components/PreviousGpa';
+import PreviousGpa from './components/cumulativeGpa/PreviousGpa';
+import Courses from './components/Courses';
 
 function App() {
   const [courses, setCourses] = useState(() => {
@@ -156,38 +157,13 @@ function App() {
 
               <Import setCourses={setCourses} />
 
-              <div className="space-y-4">
-                {courses.map((course, index) => (
-                  <Course
-                    key={index}
-                    course={course}
-                    index={index}
-                    handleCourseChange={handleCourseChange}
-                    handleRemoveCourse={handleRemoveCourse}
-                  />
-                ))}
-
-                <div className="flex justify-center">
-                  <button
-                    type="button"
-                    className="flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-50"
-                    onClick={handleAddCourse}
-                  >
-                    <Plus className="h-4 w-4" />
-                    Add Course
-                  </button>
-                </div>
-
-                <div className="text-center">
-                  <button
-                    type="button"
-                    onClick={handleClearData}
-                    className="text-sm text-gray-400 hover:text-red-500"
-                  >
-                    Clear saved data
-                  </button>
-                </div>
-              </div>
+              <Courses
+                courses={courses}
+                handleCourseChange={handleCourseChange}
+                handleRemoveCourse={handleRemoveCourse}
+                handleAddCourse={handleAddCourse}
+                handleClearData={handleClearData}
+              />
             </div>
           </div>
         </div>
