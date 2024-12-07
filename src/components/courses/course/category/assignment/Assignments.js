@@ -15,6 +15,8 @@ function Assignments({
   resetNewAssignment,
   collapsedCategories
 }) {
+  const nameInputRef = React.useRef(null);
+
   const addNewAssignment = (catName) => {
     const newAssignment = newAssignments[catName];
     
@@ -48,6 +50,10 @@ function Assignments({
 
     console.log('New Assignment Added:', newAssignment);
     resetNewAssignment(catName);
+
+    if (nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
   };
 
   const handleDeleteAssignment = (catName, assignmentIndex) => {
@@ -83,9 +89,16 @@ function Assignments({
         />
       ))}
       
-      {/* New Assignment Row */}
-      <div className="flex items-center gap-4 p-2 bg-gray-100/50 rounded-lg border-2 border-dashed border-gray-300 hover:bg-gray-100">
+      {/* Modified New Assignment Row */}
+      <form 
+        className="flex items-center gap-4 p-2 bg-gray-100/50 rounded-lg border-2 border-dashed border-gray-300 hover:bg-gray-100"
+        onSubmit={(e) => {
+          e.preventDefault();
+          addNewAssignment(catName);
+        }}
+      >
         <input
+          ref={nameInputRef}
           className="w-[100px] px-2 py-1 rounded-md border border-gray-300 text-sm"
           placeholder={getNextAssignmentName(catName, category)}
           value={newAssignments[catName]?.name || ''}
@@ -93,12 +106,6 @@ function Assignments({
             ...prev,
             [catName]: { ...(prev[catName] || {}), name: e.target.value }
           }))}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              addNewAssignment(catName);
-            }
-          }}
         />
         <div className="flex items-center gap-2">
           <input
@@ -127,13 +134,12 @@ function Assignments({
           />
         </div>
         <button
-          type="button"
-          onClick={() => addNewAssignment(catName)}
+          type="submit"
           className="text-green-500 hover:text-green-600"
         >
           <Plus className="h-4 w-4" />
         </button>
-      </div>
+      </form>
     </div>
   );
 }
