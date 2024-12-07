@@ -1,5 +1,5 @@
 import React from 'react';
-import PreviousGpa from './cumulativeGpa/PreviousGpa';
+import PreviousGpa from './PreviousGpa';
 
 function CumulativeGpa({ gpa, previousGpa, setPreviousGpa }) {
   return (

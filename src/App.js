@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Import from './components/Import';
-import CumulativeGpa from './components/CumulativeGpa';
-import Courses from './components/Courses';
+import CumulativeGpa from './components/cumulativeGpa/CumulativeGpa';
+import Courses from './components/courses/Courses';
 
 function App() {
   const [courses, setCourses] = useState(() => {

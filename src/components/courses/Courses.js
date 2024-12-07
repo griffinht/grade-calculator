@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus } from "lucide-react";
-import Course from './courses/Course';
+import Course from './course/Course';
 
 function Courses({ courses, handleCourseChange, handleRemoveCourse, handleAddCourse, handleClearData }) {
   return (
