@@ -111,7 +111,7 @@ function Categories({
           <input
             className="w-[100px] px-2 py-1 rounded-md border border-gray-300 text-sm font-medium"
             type="text"
-            placeholder="homework"
+            placeholder="exams"
             value={newCategoryName}
             onChange={(e) => setNewCategoryName(e.target.value)}
             onKeyDown={(e) => {
