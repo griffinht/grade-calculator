@@ -249,7 +249,7 @@ function Course({ course, index, handleCourseChange, handleRemoveCourse }) {
               </div>
             </div>
             
-            {calculateNeededScore() !== null && (
+            {calculateNeededScore() !== null && calculateNeededScore()?.percentage !== null && (
               <div className="p-2 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-600">
                   {calculateNeededScore().undecidedCategories.length === 1 ? (
