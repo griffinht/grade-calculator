@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Add labels to pull requests
+    labels:
+      - "dependencies"
+      - "npm"
+    # Specify version update strategy
+    versioning-strategy: increase
+    # Allow up to 10 open pull requests
+    open-pull-requests-limit: 10
+    # Ignore certain dependencies
+    ignore:
+      # Ignore major version updates for react-scripts (to maintain CRA compatibility)
+      - dependency-name: "react-scripts"
+        update-types: ["version-update:semver-major"]
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "github-actions" 
