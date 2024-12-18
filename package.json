@@ -15,7 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "wrangler pages deploy build",
+    "deploy": "wrangler pages deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
